@@ -240,6 +240,7 @@ class LDAPGroupManager(FilebasedGroupManager, DependentOnSettingsPlugin, Depende
                 )
             else:
                 self.logger.debug("Saving group %s as %s" % (group.get_name(), Group.__name__))
+                # noinspection PyProtectedMember
                 groups[key] = dict(
                     name=group._name,
                     description=group._description,

@@ -41,8 +41,8 @@ class LDAPUserManager(FilebasedUserManager, DependentOnSettingsPlugin, Dependent
         self.group_manager._refresh_ldap_groups()
         """
                 operating on the wildly unsafe assumption that the admin who configures this plugin will have their head
-                screwed on right and we are NOT escaping their search strings... only escaping unsafe user-entered text that
-                is passed directly to search filters
+                screwed on right and we are NOT escaping their search strings... only escaping unsafe user-entered text
+                that is passed directly to search filters
                 """
         ldap_user = self.ldap.search(filter_format(search_filter, (userid,)))
         if ldap_user is not None:
@@ -235,9 +235,6 @@ class LDAPUserManager(FilebasedUserManager, DependentOnSettingsPlugin, Dependent
                     "permissions": self._from_permissions(*user._permissions),
                     "apikey": user._apikey,
                     "settings": user._settings,
-
-                    # TODO: deprecated, remove in 1.5.0
-                    "roles": user._roles
                 }
             else:
                 self.logger.debug('Saving %s as %s...' % (name, User.__name__))
@@ -248,9 +245,6 @@ class LDAPUserManager(FilebasedUserManager, DependentOnSettingsPlugin, Dependent
                     "permissions": self._from_permissions(*user._permissions),
                     "apikey": user._apikey,
                     "settings": user._settings,
-
-                    # TODO: deprecated, remove in 1.5.0
-                    "roles": user._roles
                 }
 
         with atomic_write(self._userfile, mode='wt', permissions=0o600, max_permissions=0o666) as f:

@@ -4,8 +4,8 @@ from __future__ import absolute_import
 import json
 
 import ldap
-from octoprint_auth_ldap.constants import AUTH_PASSWORD, AUTH_USER, DISTINGUISHED_NAME, OU, OU_FILTER, OU_MEMBER_FILTER, \
-    REQUEST_TLS_CERT, SEARCH_BASE, URI
+from octoprint_auth_ldap.constants import AUTH_PASSWORD, AUTH_USER, DISTINGUISHED_NAME, OU, OU_FILTER, \
+    OU_MEMBER_FILTER, REQUEST_TLS_CERT, SEARCH_BASE, URI
 from octoprint_auth_ldap.tweaks import DependentOnSettingsPlugin
 
 
@@ -38,7 +38,7 @@ class LDAPConnection(DependentOnSettingsPlugin):
         except ldap.INVALID_CREDENTIALS:
             self.logger.error("Invalid credentials to bind to LDAP as %s" % user)
         except ldap.SERVER_DOWN as e:
-            self.logger.error("the server at %s is down" % uri )
+            self.logger.error("the server at %s is down" % uri)
         except ldap.LDAPError as e:
             self.logger.error(json.dumps(e))
         return None
