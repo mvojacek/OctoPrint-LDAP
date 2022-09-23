@@ -27,10 +27,10 @@ class LDAPUserManager(FilebasedUserManager, DependentOnSettingsPlugin, Dependent
     def group_manager(self):
         return self._group_manager
 
-    def find_user(self, userid=None, apikey=None, session=None):
+    def find_user(self, userid=None, apikey=None, session=None, fresh=False):
         self.logger.debug("Search for userid=%s, apiKey=%s, session=%s" % (userid, apikey, session))
-        user = FilebasedUserManager.find_user(self, userid=userid, apikey=apikey, session=session)
-        user, userid = self._find_user_with_transformation(apikey, session, user, userid)
+        user = FilebasedUserManager.find_user(self, userid=userid, apikey=apikey, session=session, fresh=fresh)
+        user, userid = self._find_user_with_transformation(apikey, session, user, userid, fresh)
         if not user and userid:
             user = self._find_user_via_ldap(user, userid)
         return user
@@ -67,7 +67,7 @@ class LDAPUserManager(FilebasedUserManager, DependentOnSettingsPlugin, Dependent
                     )
         return user
 
-    def _find_user_with_transformation(self, apikey, session, user, userid):
+    def _find_user_with_transformation(self, apikey, session, user, userid, fresh):
         transformation = self.settings.get([SEARCH_TERM_TRANSFORM])
         if not user and userid and transformation:
             self.logger.debug("Transforming %s using %s" % (userid, transformation))
@@ -75,7 +75,7 @@ class LDAPUserManager(FilebasedUserManager, DependentOnSettingsPlugin, Dependent
             self.logger.debug("Search for user userid=%s" % transformed)
             if transformed != userid:
                 userid = transformed
-                user = FilebasedUserManager.find_user(self, userid=userid, apikey=apikey, session=session)
+                user = FilebasedUserManager.find_user(self, userid=userid, apikey=apikey, session=session, fresh=fresh)
         return user, userid
 
     def add_user(self,
